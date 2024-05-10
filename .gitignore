@@ -1,2 +1,12 @@
+__pycache__/
+*.py[cod]
+*~
+tmp
+.DS_Store
+.coverage
+htmlcov/*
+*.swp
+config.py
 venv/
 stub/
+.idea/
