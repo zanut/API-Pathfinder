@@ -11,29 +11,87 @@ servers:
   # try to use IPv6 ::1, which causes an error
   - url: http://127.0.0.1:8080/pathfinder-api/v1
 paths:
+  /weather:
+    get:
+      summary: Returns the current weather conditions.
+      operationId: controller.get_weather
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Weather'
+  /traffic:
+    get:
+      summary: Returns the current traffic conditions.
+      operationId: controller.get_traffic
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Traffic'
 
-    /weather:
-        get:
-        summary: Returns the current weather conditions.
-        operationId: controller.get_weather
-        responses:
-            200:
-            description: Success
-            content:
-                application/json:
-                schema:
-                    $ref: '#/components/schemas/Weather'
+  /traffic/{deviceID}:
+    parameters:
+    - name: deviceID
+      in: path
+      required: true
+      schema:
+        type : string
+    get:
+      summary: Returns the current traffic conditions for the specified device.
+      operationId: controller.get_traffic_by_device
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Traffic'
+  /traffic/{begin}/to/{end}:
+    parameters:
+    - name: begin
+      in: path
+      required: true
+      schema:
+        type : string
+    - name: end
+      in: path
+      required: true
+      schema:
+        type : string
+    get:
+      summary: Returns the traffic conditions between the specified timestamps.
+      operationId: controller.get_traffic_by_timestamp
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Traffic'
 
-    /traffic:
-        get:
-        summary: Returns the current traffic conditions.
-        operationId: controller.get_traffic
-        responses:
-            200:
-            description: Success
-            content:
-                application/json:
-                schema:
-                    $ref: '#/components/schemas/Traffic'
 
 
+components:
+  schemas:
+    Traffic:
+      type: object
+      properties:
+        Latitude:
+          type: number
+        Longitude:
+          type: number
+        Timestamp:
+          type: string
+        DeviceID:
+          type: string
+        acceleration:
+          type: number
