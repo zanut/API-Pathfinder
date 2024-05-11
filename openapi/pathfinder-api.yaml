@@ -1,13 +1,39 @@
 openapi: 3.0.0
 info:
-  title: Chaopraya Rainfalls API
+  title: Pathfinder API
   description:
-    This API provides historical rainfall data over upper Chaopraya river basin between 1987
-    and 2022.  Raw data provided by Thai Meteorological Department (TMD).
+    The Pathfinder API collects real-time weather and traffic conditions for 
+    Ngamwongwan road, from the University gate to Kasetsart intersection. 
+    Weather data is sourced from OpenWeatherMap.
   version: 1.0.0
 servers:
   # use 127.0.0.1 here instead of localhost because openapi-to-graphql would
   # try to use IPv6 ::1, which causes an error
   - url: http://127.0.0.1:8080/pathfinder-api/v1
 paths:
+
+    /weather:
+        get:
+        summary: Returns the current weather conditions.
+        operationId: controller.get_weather
+        responses:
+            200:
+            description: Success
+            content:
+                application/json:
+                schema:
+                    $ref: '#/components/schemas/Weather'
+
+    /traffic:
+        get:
+        summary: Returns the current traffic conditions.
+        operationId: controller.get_traffic
+        responses:
+            200:
+            description: Success
+            content:
+                application/json:
+                schema:
+                    $ref: '#/components/schemas/Traffic'
+
 
