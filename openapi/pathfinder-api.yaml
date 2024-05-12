@@ -23,7 +23,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Weather'
+                  $ref: '#/components/schemas/API_weather'
   /weather/{date}:
     parameters:
       - name: date
@@ -43,7 +43,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Weather'
+                  $ref: '#/components/schemas/API_weather'
   /weather/{date}/{hour}:
     parameters:
       - name: date
@@ -70,7 +70,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Weather'
+                  $ref: '#/components/schemas/API_weather'
   /weather/{begin}/to/{end}:
     parameters:
       - name: begin
@@ -96,7 +96,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Weather'
+                  $ref: '#/components/schemas/API_weather'
   /weather/average/{date}:
     parameters:
       - name: date
