@@ -6,32 +6,47 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <body>
   <div id="chart" style="width:100%;height:75vh;"></div>
+   <div id="chartContainer"></div>
   <select id="dataComboBox">
     <!-- Options will be populated dynamically -->
   </select>
   <button id="plotButton">Plot Graph</button>
-  <div id="chartContainer"></div>
   <script>
     async function fetchDataAndPlot() {
       try {
-        // Fetch data from your API endpoint
-        const response = await fetch('http://localhost:3000/your-api-endpoint');
-        const data = await response.json(); // Assuming your API returns JSON data
 
-        // Get the combo box and button elements from the DOM
+        // Fetch data from your API endpoint
+        var response = await fetch('http://localhost:3000/graphql', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    query: `
+                      {
+                        weatherUniqueDate {
+                          date
+                         }
+                      }
+                    `
+                  })
+                });
+        const data = await response.json(); // Assuming your API returns JSON data
+        const arrayOfDicts = data.data.weatherUniqueDate;
+        console.log(data.data.weatherUniqueDate);
         const comboBox = document.getElementById('dataComboBox');
         const plotButton = document.getElementById('plotButton');
-
-        // Clear existing options in the combo box
-        comboBox.innerHTML = '';
-
-        // Populate the combo box with fetched data
-        data.forEach(item => {
+        // var table = json.data.weatherUniqueDate;
+        for (const dict of arrayOfDicts) {
           const option = document.createElement('option');
-          option.value = item.id; // Set the value of the option (e.g., item ID)
-          option.text = item.name; // Set the text displayed in the combo box (e.g., item name)
+          console.log(dict.date);
+          console.log(dict);
+          option.value = dict.date;
+          option.text = dict.date;
           comboBox.appendChild(option);
-        });
+        }
+
 
       // Add click event listener to the plot button
           plotButton.addEventListener('click', () => {
@@ -39,7 +54,20 @@
 
             // Now you can use the selected value in your GraphQL query or other code for plotting the graph
             const query = `
-              Your GraphQL query using the selectedValue
+              {
+                controllerGetWeatherByDate(date: "${selectedValue}") {
+                  cloud
+                  dp
+                  hum
+                  pres
+                  temp
+                  timestamp
+                  uvi
+                  vis
+                  wdes
+                  wmain
+                }
+              }
             `;
 
             // Placeholder function for plotting the graph (replace with your actual graph plotting logic)
@@ -50,22 +78,44 @@
         }
       }
 
-// Placeholder function for plotting the graph (replace with your actual graph plotting logic)
+    // Placeholder function for plotting the graph (replace with your actual graph plotting logic)
     async function plotGraph(query) {
-      console.log('Plotting graph with query:', query);
-      // Add your graph plotting code here
-      var resp = await fetch('http://localhost:3000/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          query: query
-        })
-      });
-      fetchDataAndPlot();
+        console.log('Plotting graph with query:', query);
+        // Add your graph plotting code here
+        var resp = await fetch('http://localhost:3000/graphql', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            query: query
+          })
+        });
+        var json = await resp.json();
+        var table = json.data.controllerGetWeatherByDate;
+        var data = [];
+        data.push({
+          x: table.map(row => row.timestamp),
+          y: table.map(row => row.temp),
+          type: 'line',
+          name: 'Temperature',
+        });
+        var layout = {
+          title: 'Average Weather by Date',
+          xaxis: {
+            title: 'Timestamp'
+          },
+          yaxis: {
+            title: 'Temperature (°C)',
+            range: [0, 50]
+          }
+        };
+        var config = { responsive: true };
+        Plotly.newPlot("chartContainer", data, layout, config);
     }
+    // Call fetchDataAndPlot when the page loads
+    fetchDataAndPlot();
   </script>
 </body>
 </html>

@@ -39,11 +39,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/WeatherUniqueDate'
           links:
-            weather:
+            weatherbydate:
               operationId: controller.get_weather_by_date
               parameters:
                 date: $response.body#/Date
-            weather/average:
+            weatherbyaverage:
               operationId: controller.get_average_weather_by_date
               parameters:
                 date: $response.body#/Date
