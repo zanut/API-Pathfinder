@@ -331,49 +331,49 @@ paths:
 
 components:
   schemas:
-      Weather:
-        type: object
-        properties:
-          Timestamp:
-            type: string
-            format: date-time
-          temp:
-            type: number
-          hum:
-            type: number
-          pres:
-            type: number
-          dp:
-            type: number
-          uvi:
-            type: number
-          cloud:
-            type: number
-          vis:
-            type: number
-          wmain:
-            type: number
-      AverageWeather:
-        type: object
-        properties:
-          wmain:
-            type: string
-          occurrence_percentage:
-            type: number
-          avg_temp:
-            type: number
-          avg_hum:
-            type: number
-          avg_pres:
-            type: number
-          avg_dp:
-            type: number
-          avg_uvi:
-            type: number
-          avg_cloud:
-            type: number
-          avg_vis:
-            type: number
+    Weather:
+      type: object
+      properties:
+        Timestamp:
+          type: string
+          format: date-time
+        temp:
+          type: number
+        hum:
+          type: number
+        pres:
+          type: number
+        dp:
+          type: number
+        uvi:
+          type: number
+        cloud:
+          type: number
+        vis:
+          type: number
+        wmain:
+          type: number
+    AverageWeather:
+      type: object
+      properties:
+        wmain:
+          type: string
+        occurrence_percentage:
+          type: number
+        avg_temp:
+          type: number
+        avg_hum:
+          type: number
+        avg_pres:
+          type: number
+        avg_dp:
+          type: number
+        avg_uvi:
+          type: number
+        avg_cloud:
+          type: number
+        avg_vis:
+          type: number
 
     Traffic:
       type: object
