@@ -23,7 +23,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/API_weather'
+                  $ref: '#/components/schemas/Weather'
 
   /weather/{date}:
     parameters:
@@ -44,8 +44,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/API_weather'
-
+                  $ref: '#/components/schemas/Weather'
   /weather/{date}/{hour}:
     parameters:
       - name: date
@@ -72,8 +71,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/API_weather'
-
+                  $ref: '#/components/schemas/Weather'
   /weather/{begin}/to/{end}:
     parameters:
       - name: begin
@@ -99,8 +97,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/API_weather'
-
+                  $ref: '#/components/schemas/Weather'
   /weather/average/{date}:
     parameters:
       - name: date
@@ -120,26 +117,34 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    avg_temp:
-                      type: number
-                    avg_hum:
-                      type: number
-                    avg_pres:
-                      type: number
-                    avg_dp:
-                      type: number
-                    avg_uvi:
-                      type: number
-                    avg_cloud:
-                      type: number
-                    avg_vis:
-                      type: number
-                    wmain:
-                      type: string
-                    occurrence_percentage:
-                      type: number
+                  $ref: '#/components/schemas/AverageWeather'
+  /weather/average/{date}/{hour}:
+    parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date
+      - name: hour
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 23
+    get:
+      summary: Return average weather conditions for the specified date and hour.
+      operationId: controller.get_average_weather_by_date_hour
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AverageWeather'
 
   /traffic:
     get:
@@ -300,6 +305,50 @@ paths:
 
 components:
   schemas:
+      Weather:
+        type: object
+        property:
+          Timestamp:
+            type: string
+            format: date-time
+          temp:
+            type: number
+          hum:
+            type: number
+          pres:
+            type: number
+          dp:
+            type: number
+          uvi:
+            type: number
+          cloud:
+            type: number
+          vis:
+            type: number
+          wmain:
+            type: number
+      AverageWeather:
+        type: object
+        property:
+          wmain:
+            type: string
+          occurrence_percentage:
+            type: number
+          avg_temp:
+            type: number
+          avg_hum:
+            type: number
+          avg_pres:
+            type: number
+          avg_dp:
+            type: number
+          avg_uvi:
+            type: number
+          avg_cloud:
+            type: number
+          avg_vis:
+            type: number
+
     Traffic:
       type: object
       properties:

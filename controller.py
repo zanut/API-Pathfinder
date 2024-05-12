@@ -77,18 +77,30 @@ def get_average_weather_by_date(date):
             WHERE DATE(Timestamp) = %s
             GROUP BY wmain
         """, (date, date))
-        result = [{
-            'wmain': row[7],
-            'occurrence_percentage': row[8],
-            'avg_temp': row[0],
-            'avg_hum': row[1],
-            'avg_pres': row[2],
-            'avg_dp': row[3],
-            'avg_uvi': row[4],
-            'avg_cloud': row[5],
-            'avg_vis': row[6]
-        } for row in cs.fetchall()]
+        result = [models.AverageWeather(*row) for row in cs.fetchall()]
         return result
+
+
+def get_average_weather_by_date_hour(date, hour):
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT 
+                ROUND(AVG(temp), 4) AS avg_temp, 
+                ROUND(AVG(hum), 4) AS avg_hum, 
+                ROUND(AVG(pres), 4) AS avg_pres, 
+                ROUND(AVG(dp), 4) AS avg_dp, 
+                ROUND(AVG(uvi), 4) AS avg_uvi, 
+                ROUND(AVG(cloud), 4) AS avg_cloud, 
+                ROUND(AVG(vis), 4) AS avg_vis,
+                wmain,
+                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE DATE(Timestamp) = %s AND HOUR(Timestamp) = %s), 4) AS occurrence_percentage
+            FROM API_weather
+            WHERE DATE(Timestamp) = %s AND HOUR(Timestamp) = %s
+            GROUP BY wmain
+        """, (date, hour, date, hour))
+        result = [models.AverageWeather(*row) for row in cs.fetchall()]
+        return result
+
 
 def get_traffic_all():
     with pool.connection() as conn, conn.cursor() as cs:
@@ -99,6 +111,7 @@ def get_traffic_all():
         result = [models.Traffic(*row) for row in cs.fetchall()]
         return result
 
+
 def get_devices():
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -107,6 +120,7 @@ def get_devices():
         """)
         result = [models.Device(*row) for row in cs.fetchall()]
         return result
+
 
 def get_traffic_by_device(device_id):
     with pool.connection() as conn, conn.cursor() as cs:
@@ -118,6 +132,7 @@ def get_traffic_by_device(device_id):
         result = [models.Traffic(*row) for row in cs.fetchall()]
         return result
 
+
 def get_traffic_by_device_timestamp(device_id, begin, end):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -128,6 +143,8 @@ def get_traffic_by_device_timestamp(device_id, begin, end):
         """, (device_id, begin, end))
         result = [models.Traffic(*row) for row in cs.fetchall()]
         return result
+
+
 def get_traffic_by_device_date(device_id, date):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -138,6 +155,7 @@ def get_traffic_by_device_date(device_id, date):
         """, (device_id, date))
         result = [models.Traffic(*row) for row in cs.fetchall()]
         return result
+
 
 def get_traffic_by_device_weather(device_id, wmain):
     with pool.connection() as conn, conn.cursor() as cs:
@@ -151,6 +169,7 @@ def get_traffic_by_device_weather(device_id, wmain):
         result = [models.Traffic(*row) for row in cs.fetchall()]
         return result
 
+
 def get_traffic_unique_dates():
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -159,6 +178,8 @@ def get_traffic_unique_dates():
         """)
         result = [row[0] for row in cs.fetchall()]
         return result
+
+
 def get_traffic_by_date(date):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
