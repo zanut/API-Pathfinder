@@ -14,6 +14,8 @@ pool = PooledDB(creator=pymysql,
                 database=DB_NAME,
                 maxconnections=1,
                 blocking=True)
+
+
 def get_weather():
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -22,6 +24,30 @@ def get_weather():
         """)
         result = [models.Weather(*row) for row in cs.fetchall()]
         return result
+
+
+def get_weather_by_date(date):
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT temp, hum, pres, dp, uvi, cloud, vis, wmain, wdes, Timestamp
+            FROM API_weather
+            WHERE DATE(Timestamp) = %s
+        """, (date,))
+        result = [models.Weather(*row) for row in cs.fetchall()]
+        return result
+
+
+def get_weather_by_date_hour(date, hour):
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT temp, hum, pres, dp, uvi, cloud, vis, wmain, wdes, Timestamp
+            FROM API_weather
+            WHERE DATE(Timestamp) = %s
+            AND HOUR(Timestamp) = %s
+        """, (date, hour))
+        result = [models.Weather(*row) for row in cs.fetchall()]
+        return result
+
 
 def get_weather_by_timestamp(begin, end):
     with pool.connection() as conn, conn.cursor() as cs:

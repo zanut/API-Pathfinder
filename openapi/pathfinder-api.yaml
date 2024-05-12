@@ -24,21 +24,44 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Weather'
-  /weather/{begin}/to/{end}:
+  /weather/{date}:
     parameters:
-      - name: begin
+      - name: date
         in: path
         required: true
         schema:
           type: string
-      - name: end
-        in: path
-        required: true
-        schema:
-          type: string
+          format: date
     get:
-      summary: return weather conditions from the specified timestamp.
-      operationId: controller.get_weather_by_timestamp
+      summary: return weather conditions from the specified date.
+      operationId: controller.get_weather_by_date
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Weather'
+  /weather/{date}/{hour}:
+    parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date
+      - name: hour
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 23
+    get:
+      summary: return weather conditions for the specified date and hour.
+      operationId: controller.get_weather_by_date_hour
       responses:
         200:
           description: Success
