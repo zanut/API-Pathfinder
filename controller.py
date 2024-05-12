@@ -26,6 +26,16 @@ def get_weather():
         return result
 
 
+def get_weather_unique_date():
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT DISTINCT DATE(Timestamp)
+            FROM API_weather
+        """)
+        result = [row[0] for row in cs.fetchall()]
+        return result
+
+
 def get_weather_by_date(date):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -64,19 +74,20 @@ def get_average_weather_by_date(date):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
             SELECT
+                %s AS date,
                 wmain,
-                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE DATE(Timestamp) = %s), 4) AS occurrence_percentage
+                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE DATE(Timestamp) = %s), 4) AS occurrence_percentage,
                 ROUND(AVG(temp), 4) AS avg_temp, 
                 ROUND(AVG(hum), 4) AS avg_hum, 
                 ROUND(AVG(pres), 4) AS avg_pres, 
                 ROUND(AVG(dp), 4) AS avg_dp, 
                 ROUND(AVG(uvi), 4) AS avg_uvi, 
                 ROUND(AVG(cloud), 4) AS avg_cloud, 
-                ROUND(AVG(vis), 4) AS avg_vis,
+                ROUND(AVG(vis), 4) AS avg_vis
             FROM API_weather
             WHERE DATE(Timestamp) = %s
             GROUP BY wmain
-        """, (date, date))
+        """, (date, date, date))
         result = [models.AverageWeather(*row) for row in cs.fetchall()]
         return result
 
@@ -84,20 +95,21 @@ def get_average_weather_by_date(date):
 def get_average_weather_by_date_hour(date, hour):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
-            SELECT 
+            SELECT
+                %s AS date,
                 wmain,
-                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE DATE(Timestamp) = %s AND HOUR(Timestamp) = %s), 4) AS occurrence_percentage
+                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE DATE(Timestamp) = %s AND HOUR(Timestamp) = %s), 4) AS occurrence_percentage,
                 ROUND(AVG(temp), 4) AS avg_temp, 
                 ROUND(AVG(hum), 4) AS avg_hum, 
                 ROUND(AVG(pres), 4) AS avg_pres, 
                 ROUND(AVG(dp), 4) AS avg_dp, 
                 ROUND(AVG(uvi), 4) AS avg_uvi, 
                 ROUND(AVG(cloud), 4) AS avg_cloud, 
-                ROUND(AVG(vis), 4) AS avg_vis,
+                ROUND(AVG(vis), 4) AS avg_vis
             FROM API_weather
             WHERE DATE(Timestamp) = %s AND HOUR(Timestamp) = %s
             GROUP BY wmain
-        """, (date, hour, date, hour))
+        """, (date, date, hour, date, hour))
         result = [models.AverageWeather(*row) for row in cs.fetchall()]
         return result
 
@@ -212,6 +224,16 @@ def get_traffic_by_date(date):
         return result
 
 
+def get_traffic_unique_travel_id():
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT DISTINCT TravelID
+            FROM Updated_GPS_tracker
+        """)
+        result = [row[0] for row in cs.fetchall()]
+        return result
+
+
 def get_traffic_by_travel_id(travel_id):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -227,10 +249,13 @@ def get_traffic_details_by_travel_id(travel_id):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
             SELECT 
-                AVG(Acceleration) AS avg_acceleration, 
-                TIMESTAMPDIFF(MINUTES, MIN(Timestamp), MAX(Timestamp)) AS time_spent
+                %s AS travelID,
+                MIN(Timestamp) AS startTime,
+                MAX(Timestamp) AS endTime,
+                ROUND(AVG(Acceleration), 4) AS avg_acceleration, 
+                TIMESTAMPDIFF(MINUTE, MIN(Timestamp), MAX(Timestamp)) AS time_spent
             FROM Updated_GPS_tracker
             WHERE TravelID = %s
-        """, (travel_id,))
+        """, (travel_id, travel_id,))
         result = [models.DetailsTraffic(*row) for row in cs.fetchall()]
         return result

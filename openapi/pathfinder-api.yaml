@@ -25,6 +25,29 @@ paths:
                 items:
                   $ref: '#/components/schemas/Weather'
 
+  /weather/uniqueDate:
+    get:
+      summary: Returns the all unique Date.
+      operationId: controller.get_weather_unique_date
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WeatherUniqueDate'
+          links:
+            weather:
+              operationId: controller.get_weather_by_date
+              parameters:
+                date: $response.body#/Date
+            weather/average:
+              operationId: controller.get_average_weather_by_date
+              parameters:
+                date: $response.body#/Date
+
   /weather/{date}:
     parameters:
       - name: date
@@ -45,6 +68,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Weather'
+
   /weather/{date}/{hour}:
     parameters:
       - name: date
@@ -72,6 +96,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Weather'
+
   /weather/{begin}/to/{end}:
     parameters:
       - name: begin
@@ -98,6 +123,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Weather'
+
   /weather/average/{date}:
     parameters:
       - name: date
@@ -118,6 +144,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AverageWeather'
+
   /weather/average/{date}/{hour}:
     parameters:
       - name: date
@@ -145,6 +172,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AverageWeather'
+
   /weather/average/{begin}/to/{end}:
     parameters:
       - name: begin
@@ -347,6 +375,25 @@ paths:
                 schema:
                   $ref: '#/components/schemas/Traffic'
 
+  /traffic/uniqueTravelID:
+    get:
+      summary: Returns the all unique TravelID.
+      operationId: controller.get_traffic_unique_travel_id
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UniqueTravelID'
+          links:
+            details:
+              operationId: controller.get_average_traffic_by_travel_id
+              parameters:
+                TravelID: $response.body#/TravelID
+
   /traffic/details/{TravelID}:
     parameters:
       - name: TravelID
@@ -375,7 +422,7 @@ components:
           format: date-time
         wmain:
           type: string
-          wdes:
+        wdes:
             type: string
         temp:
           type: number
@@ -394,6 +441,13 @@ components:
     AverageWeather:
       type: object
       properties:
+        date:
+          type: string
+          format: date
+        startTime:
+          type: string
+        endTime:
+          type: string
         wmain:
           type: string
         occurrence_percentage:
@@ -412,6 +466,12 @@ components:
           type: number
         avg_vis:
           type: number
+    WeatherUniqueDate:
+      type: object
+      properties:
+        Date:
+          type: string
+          format: date
 
     Traffic:
       type: object
@@ -437,9 +497,20 @@ components:
         Date:
           type: string
           format: date
+    UniqueTravelID:
+      type: object
+        properties:
+          TravelID:
+            type: integer
     DetailsTraffic:
       type: object
       properties:
+        travelID:
+          type: number
+        startTime:
+          type: date-time
+        endTime:
+          type: date-time
         avg_acceleration:
           type: number
         time_spent:
