@@ -71,25 +71,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Weather'
-  /weather/{wmain}:
-    parameters:
-      - name: wmain
-        in: path
-        required: true
-        schema:
-          type: string
-    get:
-      summary: return time interval and all weather details from the specified weather condition.
-      operationId: controller.get_all_by_weather
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Weather'
 
   /traffic:
     get:
