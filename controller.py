@@ -245,6 +245,22 @@ def get_traffic_by_travel_id(travel_id):
         return result
 
 
+def get_traffic_details():
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT 
+                TravelID AS travelID,
+                MIN(Timestamp) AS startTime,
+                MAX(Timestamp) AS endTime,
+                ROUND(AVG(Acceleration), 4) AS avg_acceleration,
+                TIMESTAMPDIFF(MINUTE, MIN(Timestamp), MAX(Timestamp)) AS time_spent
+            FROM Updated_GPS_tracker
+            GROUP BY TravelID
+        """)
+        result = [models.DetailsTraffic(*row) for row in cs.fetchall()]
+        return result
+
+
 def get_traffic_details_by_travel_id(travel_id):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""

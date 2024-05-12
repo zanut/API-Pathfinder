@@ -390,9 +390,21 @@ paths:
                   $ref: '#/components/schemas/UniqueTravelID'
           links:
             details:
-              operationId: controller.get_average_traffic_by_travel_id
+              operationId: controller.get_traffic_details_by_travel_id
               parameters:
                 TravelID: $response.body#/TravelID
+
+  /traffic/details:
+      get:
+        summary: Returns the average acceleration and time spent for every travelID.
+        operationId: controller.get_traffic_details_by_travel_id
+        responses:
+          200:
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/DetailsTraffic'
 
   /traffic/details/{TravelID}:
     parameters:
