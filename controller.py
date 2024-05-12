@@ -32,7 +32,7 @@ def get_weather_unique_date():
             SELECT DISTINCT DATE(Timestamp)
             FROM API_weather
         """)
-        result = [row[0] for row in cs.fetchall()]
+        result = [models.WeatherUniqueDate(*row) for row in cs.fetchall()]
         return result
 
 
@@ -209,7 +209,7 @@ def get_traffic_unique_dates():
             SELECT DISTINCT DATE(Timestamp) as date
             FROM Updated_GPS_tracker
         """)
-        result = [row[0] for row in cs.fetchall()]
+        result = [models.UniqueDate(*row) for row in cs.fetchall()]
         return result
 
 
@@ -230,7 +230,7 @@ def get_traffic_unique_travel_id():
             SELECT DISTINCT TravelID
             FROM Updated_GPS_tracker
         """)
-        result = [row[0] for row in cs.fetchall()]
+        result = [models.UniqueTravelID(*row) for row in cs.fetchall()]
         return result
 
 

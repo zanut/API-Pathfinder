@@ -397,7 +397,7 @@ paths:
   /traffic/details:
       get:
         summary: Returns the average acceleration and time spent for every travelID.
-        operationId: controller.get_traffic_details_by_travel_id
+        operationId: controller.get_traffic_details
         responses:
           200:
             description: Success
