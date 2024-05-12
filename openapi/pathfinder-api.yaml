@@ -72,7 +72,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Weather'
-  /weather/{begin}/{end}:
+  /weather/{begin}/to/{end}:
     parameters:
       - name: begin
         in: path
@@ -145,7 +145,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AverageWeather'
-  /weather/average/{begin}/{end}:
+  /weather/average/{begin}/to/{end}:
     parameters:
       - name: begin
         in: path
@@ -269,7 +269,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Traffic'
 
-  /traffic/device/{deviceID}/{wmain}:
+  /traffic/device/{deviceID}/weather/{wmain}:
     parameters:
       - name: deviceID
         in: path
@@ -329,6 +329,42 @@ paths:
               schema:
                 $ref: '#/components/schemas/Traffic'
 
+  /traffic/{TravelID}:
+    parameters:
+      - name: TravelID
+        in: path
+        required: true
+        schema:
+          type: integer
+      get:
+        summary: Returns the all traffic statistics for the specified travelID.
+        operationId: controller.get_traffic_by_travel_id
+        responses:
+          200:
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Traffic'
+
+  /traffic/average/{TravelID}:
+    parameters:
+      - name: TravelID
+        in: path
+        required: true
+        schema:
+          type: integer
+      get:
+        summary: Returns the average acceleration and time spent form the specified travelID.
+        operationId: controller.get_average_traffic_by_travel_id
+        responses:
+          200:
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/AverageTraffic'
+
 components:
   schemas:
     Weather:
@@ -337,6 +373,10 @@ components:
         Timestamp:
           type: string
           format: date-time
+        wmain:
+          type: string
+          wdes:
+            type: string
         temp:
           type: number
         hum:
@@ -350,8 +390,6 @@ components:
         cloud:
           type: number
         vis:
-          type: number
-        wmain:
           type: number
     AverageWeather:
       type: object
@@ -378,12 +416,12 @@ components:
     Traffic:
       type: object
       properties:
+        Timestamp:
+          type: string
         Latitude:
           type: number
         Longitude:
           type: number
-        Timestamp:
-          type: string
         DeviceID:
           type: string
         acceleration:
@@ -399,3 +437,9 @@ components:
         Date:
           type: string
           format: date
+    AverageTraffic:
+      type: object
+      properties:
+        avg_acceleration:
+          type: number
+

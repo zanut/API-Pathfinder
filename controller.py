@@ -19,7 +19,7 @@ pool = PooledDB(creator=pymysql,
 def get_weather():
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
-            SELECT temp, hum, pres, dp, uvi, cloud, vis, wmain, wdes, Timestamp
+            SELECT Timestamp, wmain, wdes, temp, hum, pres, dp, uvi, cloud, vis
             FROM API_weather
         """)
         result = [models.Weather(*row) for row in cs.fetchall()]
@@ -29,7 +29,7 @@ def get_weather():
 def get_weather_by_date(date):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
-            SELECT temp, hum, pres, dp, uvi, cloud, vis, wmain, wdes, Timestamp
+            SELECT Timestamp, wmain, wdes, temp, hum, pres, dp, uvi, cloud, vis
             FROM API_weather
             WHERE DATE(Timestamp) = %s
         """, (date,))
@@ -40,7 +40,7 @@ def get_weather_by_date(date):
 def get_weather_by_date_hour(date, hour):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
-            SELECT temp, hum, pres, dp, uvi, cloud, vis, wmain, wdes, Timestamp
+            SELECT Timestamp, wmain, wdes, temp, hum, pres, dp, uvi, cloud, vis
             FROM API_weather
             WHERE DATE(Timestamp) = %s
             AND HOUR(Timestamp) = %s
@@ -52,7 +52,7 @@ def get_weather_by_date_hour(date, hour):
 def get_weather_between_timestamps(begin, end):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
-            SELECT temp, hum, pres, dp, uvi, cloud, vis, wmain, wdes, Timestamp
+            SELECT Timestamp, wmain, wdes, temp, hum, pres, dp, uvi, cloud, vis
             FROM API_weather
             WHERE Timestamp BETWEEN %s AND %s
         """, (begin, end))
@@ -63,7 +63,9 @@ def get_weather_between_timestamps(begin, end):
 def get_average_weather_by_date(date):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
-            SELECT 
+            SELECT
+                wmain,
+                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE DATE(Timestamp) = %s), 4) AS occurrence_percentage
                 ROUND(AVG(temp), 4) AS avg_temp, 
                 ROUND(AVG(hum), 4) AS avg_hum, 
                 ROUND(AVG(pres), 4) AS avg_pres, 
@@ -71,8 +73,6 @@ def get_average_weather_by_date(date):
                 ROUND(AVG(uvi), 4) AS avg_uvi, 
                 ROUND(AVG(cloud), 4) AS avg_cloud, 
                 ROUND(AVG(vis), 4) AS avg_vis,
-                wmain,
-                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE DATE(Timestamp) = %s), 4) AS occurrence_percentage
             FROM API_weather
             WHERE DATE(Timestamp) = %s
             GROUP BY wmain
@@ -85,6 +85,8 @@ def get_average_weather_by_date_hour(date, hour):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
             SELECT 
+                wmain,
+                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE DATE(Timestamp) = %s AND HOUR(Timestamp) = %s), 4) AS occurrence_percentage
                 ROUND(AVG(temp), 4) AS avg_temp, 
                 ROUND(AVG(hum), 4) AS avg_hum, 
                 ROUND(AVG(pres), 4) AS avg_pres, 
@@ -92,8 +94,6 @@ def get_average_weather_by_date_hour(date, hour):
                 ROUND(AVG(uvi), 4) AS avg_uvi, 
                 ROUND(AVG(cloud), 4) AS avg_cloud, 
                 ROUND(AVG(vis), 4) AS avg_vis,
-                wmain,
-                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE DATE(Timestamp) = %s AND HOUR(Timestamp) = %s), 4) AS occurrence_percentage
             FROM API_weather
             WHERE DATE(Timestamp) = %s AND HOUR(Timestamp) = %s
             GROUP BY wmain
@@ -106,6 +106,8 @@ def get_average_weather_between_timestamp(begin_timestamp, end_timestamp):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
             SELECT 
+                wmain,
+                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE Timestamp >= %s AND Timestamp <= %s), 4) AS occurrence_percentage
                 ROUND(AVG(temp), 4) AS avg_temp, 
                 ROUND(AVG(hum), 4) AS avg_hum, 
                 ROUND(AVG(pres), 4) AS avg_pres, 
@@ -113,8 +115,6 @@ def get_average_weather_between_timestamp(begin_timestamp, end_timestamp):
                 ROUND(AVG(uvi), 4) AS avg_uvi, 
                 ROUND(AVG(cloud), 4) AS avg_cloud, 
                 ROUND(AVG(vis), 4) AS avg_vis,
-                wmain,
-                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE Timestamp >= %s AND Timestamp <= %s), 4) AS occurrence_percentage
             FROM API_weather
             WHERE Timestamp >= %s AND Timestamp <= %s
             GROUP BY wmain
@@ -208,5 +208,16 @@ def get_traffic_by_date(date):
             FROM Updated_GPS_tracker
             WHERE DATE(Timestamp) = %s
         """, (date,))
+        result = [models.Traffic(*row) for row in cs.fetchall()]
+        return result
+
+
+def get_traffic_by_travel_id(travel_id):
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT Timestamp, Latitude, Longitude, DeviceID, Acceleration
+            FROM Updated_GPS_tracker
+            WHERE TravelID = %s
+        """, (travel_id,))
         result = [models.Traffic(*row) for row in cs.fetchall()]
         return result
