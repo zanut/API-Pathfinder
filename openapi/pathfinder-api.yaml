@@ -364,16 +364,16 @@ paths:
         required: true
         schema:
           type: integer
-      get:
-        summary: Returns the all traffic statistics for the specified travelID.
-        operationId: controller.get_traffic_by_travel_id
-        responses:
-          200:
-            description: Success
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Traffic'
+    get:
+      summary: Returns the all traffic statistics for the specified travelID.
+      operationId: controller.get_traffic_by_travel_id
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Traffic'
 
   /traffic/uniqueTravelID:
     get:
@@ -401,16 +401,16 @@ paths:
         required: true
         schema:
           type: integer
-      get:
-        summary: Returns the average acceleration and time spent form the specified travelID.
-        operationId: controller.get_average_traffic_by_travel_id
-        responses:
-          200:
-            description: Success
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/DetailsTraffic'
+    get:
+      summary: Returns the average acceleration and time spent form the specified travelID.
+      operationId: controller.get_traffic_details_by_travel_id
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailsTraffic'
 
 components:
   schemas:
@@ -423,7 +423,7 @@ components:
         wmain:
           type: string
         wdes:
-            type: string
+          type: string
         temp:
           type: number
         hum:
@@ -499,20 +499,21 @@ components:
           format: date
     UniqueTravelID:
       type: object
-        properties:
-          TravelID:
-            type: integer
+      properties:
+        TravelID:
+          type: number
     DetailsTraffic:
       type: object
       properties:
         travelID:
           type: number
         startTime:
-          type: date-time
+          type: string
+          format: date-time
         endTime:
-          type: date-time
+          type: string
+          format: date-time
         avg_acceleration:
           type: number
         time_spent:
           type: number
-

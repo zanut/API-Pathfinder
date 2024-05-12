@@ -162,4 +162,4 @@ cython_debug/
 .idea/
 stub/
 config.py
-
+openapi-generator-cli-7.0.1.jar
