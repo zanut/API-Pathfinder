@@ -49,7 +49,7 @@ def get_weather_by_date_hour(date, hour):
         return result
 
 
-def get_weather_by_timestamp(begin, end):
+def get_weather_between_timestamps(begin, end):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
             SELECT temp, hum, pres, dp, uvi, cloud, vis, wmain, wdes, Timestamp

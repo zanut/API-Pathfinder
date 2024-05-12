@@ -71,7 +71,33 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Weather'
-  weather/average/{date}:
+  /weather/{begin}/to/{end}:
+    parameters:
+      - name: begin
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: end
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date-time
+    get:
+      summary: Return weather conditions from the specified timestamp range.
+      operationId: controller.get_weather_between_timestamps
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Weather'
+  /weather/average/{date}:
     parameters:
       - name: date
         in: path
