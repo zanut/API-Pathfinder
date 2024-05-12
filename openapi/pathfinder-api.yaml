@@ -23,7 +23,54 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Weather'
+                  $ref: '#/components/schemas/API_weather'
+  /weather/{date}:
+    parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date
+    get:
+      summary: return weather conditions from the specified date.
+      operationId: controller.get_weather_by_date
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/API_weather'
+  /weather/{date}/{hour}:
+    parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date
+      - name: hour
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 23
+    get:
+      summary: return weather conditions for the specified date and hour.
+      operationId: controller.get_weather_by_date_hour
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/API_weather'
   /weather/{begin}/to/{end}:
     parameters:
       - name: begin
@@ -31,14 +78,16 @@ paths:
         required: true
         schema:
           type: string
+          format: date-time
       - name: end
         in: path
         required: true
         schema:
           type: string
+          format: date-time
     get:
-      summary: return weather conditions from the specified timestamp.
-      operationId: controller.get_weather_by_timestamp
+      summary: Return weather conditions from the specified timestamp range.
+      operationId: controller.get_weather_between_timestamps
       responses:
         200:
           description: Success
@@ -47,17 +96,18 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Weather'
-  /weather/{wmain}:
+                  $ref: '#/components/schemas/API_weather'
+  /weather/average/{date}:
     parameters:
-      - name: wmain
+      - name: date
         in: path
         required: true
         schema:
           type: string
+          format: date
     get:
-      summary: return time interval and all weather details from the specified weather condition.
-      operationId: controller.get_all_by_weather
+      summary: Return average weather conditions for the specified date.
+      operationId: controller.get_average_weather_by_date
       responses:
         200:
           description: Success
@@ -66,7 +116,26 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Weather'
+                  type: object
+                  properties:
+                    avg_temp:
+                      type: number
+                    avg_hum:
+                      type: number
+                    avg_pres:
+                      type: number
+                    avg_dp:
+                      type: number
+                    avg_uvi:
+                      type: number
+                    avg_cloud:
+                      type: number
+                    avg_vis:
+                      type: number
+                    wmain:
+                      type: string
+                    occurrence_percentage:
+                      type: number
 
   /traffic:
     get:
