@@ -71,6 +71,45 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Weather'
+  weather/average/{date}:
+    parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date
+    get:
+      summary: Return average weather conditions for the specified date.
+      operationId: controller.get_average_weather_by_date
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    avg_temp:
+                      type: number
+                    avg_hum:
+                      type: number
+                    avg_pres:
+                      type: number
+                    avg_dp:
+                      type: number
+                    avg_uvi:
+                      type: number
+                    avg_cloud:
+                      type: number
+                    avg_vis:
+                      type: number
+                    wmain:
+                      type: string
+                    occurrence_percentage:
+                      type: number
 
   /traffic:
     get:
