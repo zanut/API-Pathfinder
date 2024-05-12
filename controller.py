@@ -90,4 +90,81 @@ def get_average_weather_by_date(date):
         } for row in cs.fetchall()]
         return result
 
+def get_traffic_all():
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT Timestamp, Latitude, Longitude, DeviceID, Acceleration
+            FROM Updated_GPS_tracker
+        """)
+        result = [models.Traffic(*row) for row in cs.fetchall()]
+        return result
 
+def get_devices():
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT DISTINCT DeviceID
+            FROM Updated_GPS_tracker
+        """)
+        result = [models.Device(*row) for row in cs.fetchall()]
+        return result
+
+def get_traffic_by_device(device_id):
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT Timestamp, Latitude, Longitude, DeviceID, Acceleration
+            FROM Updated_GPS_tracker
+            WHERE DeviceID = %s
+        """, (device_id,))
+        result = [models.Traffic(*row) for row in cs.fetchall()]
+        return result
+
+def get_traffic_by_device_timestamp(device_id, begin, end):
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT Timestamp, Latitude, Longitude, DeviceID, Acceleration
+            FROM Updated_GPS_tracker
+            WHERE DeviceID = %s
+            AND Timestamp BETWEEN %s AND %s
+        """, (device_id, begin, end))
+        result = [models.Traffic(*row) for row in cs.fetchall()]
+        return result
+def get_traffic_by_device_date(device_id, date):
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT Timestamp, Latitude, Longitude, DeviceID, Acceleration
+            FROM Updated_GPS_tracker
+            WHERE DeviceID = %s
+            AND DATE(Timestamp) = %s
+        """, (device_id, date))
+        result = [models.Traffic(*row) for row in cs.fetchall()]
+        return result
+
+def get_traffic_by_device_weather(device_id, wmain):
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT t.Timestamp, t.Latitude, t.Longitude, t.DeviceID, t.Acceleration
+            FROM Updated_GPS_tracker t
+            INNER JOIN API_weather w ON DATE(t.Timestamp) = DATE(w.Timestamp)
+            WHERE t.DeviceID = %s
+            AND w.wmain = %s
+        """, (device_id, wmain))
+        result = [models.Traffic(*row) for row in cs.fetchall()]
+        return result
+
+def get_traffic_unique_dates():
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT DISTINCT DATE(Timestamp) as date
+            FROM Updated_GPS_tracker
+        """)
+        result = [row[0] for row in cs.fetchall()]
+        return result
+def get_traffic_by_date(date):
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT Timestamp, Latitude, Longitude, DeviceID, Acceleration
+            FROM Updated_GPS_tracker
+            WHERE DATE(Timestamp) = %s
+        """, (date,))
+        result = [models.Traffic(*row) for row in cs.fetchall()]
+        return result

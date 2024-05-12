@@ -24,6 +24,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/API_weather'
+
   /weather/{date}:
     parameters:
       - name: date
@@ -44,6 +45,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/API_weather'
+
   /weather/{date}/{hour}:
     parameters:
       - name: date
@@ -71,6 +73,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/API_weather'
+
   /weather/{begin}/to/{end}:
     parameters:
       - name: begin
@@ -97,6 +100,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/API_weather'
+
   /weather/average/{date}:
     parameters:
       - name: date
@@ -140,7 +144,7 @@ paths:
   /traffic:
     get:
       summary: Returns the all traffic statistics.
-      operationId: controller.get_traffic
+      operationId: controller.get_traffic_all
       responses:
         200:
           description: Success
@@ -154,7 +158,7 @@ paths:
   /traffic/devices:
     get:
       summary: Return all devices that are being tracked.
-      operationId: controller.get_traffic_all
+      operationId: controller.get_devices
       responses:
         200:
           description: Success
@@ -233,6 +237,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Traffic'
+
   /traffic/device/{deviceID}/{wmain}:
     parameters:
       - name: deviceID
@@ -259,7 +264,7 @@ paths:
   /traffic/uniqueDate:
     get:
       summary: Returns the all unique dates of traffic statistics.
-      operationId: controller.get_traffic_unique_date
+      operationId: controller.get_traffic_unique_dates
       responses:
         200:
           description: Success
@@ -292,7 +297,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Traffic'
-
 
 components:
   schemas:
