@@ -72,7 +72,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Weather'
-  /weather/{begin}/to/{end}:
+  /weather/{begin}/{end}:
     parameters:
       - name: begin
         in: path
@@ -136,6 +136,32 @@ paths:
     get:
       summary: Return average weather conditions for the specified date and hour.
       operationId: controller.get_average_weather_by_date_hour
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AverageWeather'
+  /weather/average/{begin}/{end}:
+    parameters:
+      - name: begin
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: end
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date-time
+    get:
+      summary: Return average weather conditions from the specified timestamp range.
+      operationId: controller.get_average_weather_between_timestamp
       responses:
         200:
           description: Success
