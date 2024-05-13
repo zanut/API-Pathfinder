@@ -1,14 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Traffic Condition</title>
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <a href="javascript:history.back()" style="display: block; position: absolute; top: 5rem; left: 5rem; padding: 1rem; border: 1px solid #ddd; border-radius: 5px; text-decoration: none; color: #007bff;">Back</a>
+    <meta charset="utf-8">
+    <title>Traffic Condition</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    #dataComboBox,
+    #plotButton {
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+      font-size: 16px;
+    }
+
+    #plotButton {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* Style for each chart container */
+    .chart-container {
+      width: 1000px;
+      height: 600px;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+  </style>
 <style>
 
 </style>
 <body>
-<div id="chartDiv" style="width:100%;height:75vh;"></div>
+<div id="chartDiv"></div>
+<div id="chartDiv2"></div>
 </body>
 <script>
   async function fetchDataAndPlot() {
@@ -36,8 +77,31 @@
     const arrayOfDicts = data.data.trafficDetails;
     const timeSpentValues = arrayOfDicts.map(item => item.timeSpent);
     const timestampValues = arrayOfDicts.map(item => item.startTime); // Assuming startTime represents Timestamp
+    const avgAcc = arrayOfDicts.map(item => item.avgAcceleration);
 
-    const trace = {
+    const traceAcceleration = [
+        {
+            type: 'bar',
+            y: avgAcc,
+            text: 'Avg Acceleration',
+            marker: { color: 'blue' },
+            name: 'Avg Acceleration'
+        },
+        {
+            type: 'bar',
+            y: timeSpentValues,
+            text: 'Time Spent',
+            marker: { color: 'red'},
+            name: 'Time Spent'
+        }
+        ];
+    const layout = {
+        title: 'Bar Graph Relation between Average Acceleration and Time Spent',
+        xaxis: { title: '' },
+    };
+
+    Plotly.newPlot('chartDiv', traceAcceleration, layout);
+    const traceRoutes = {
       x: timestampValues,
       y: timeSpentValues,
       type: 'scatter',
@@ -45,16 +109,16 @@
       marker: { size: 10, color: 'blue' },
       name: 'Time Spent'
     };
-    const layout = {
+    const layout2 = {
       title: 'Time Spent on Road Over Time',
       xaxis: { title: 'Timestamp' },
       yaxis: { title: 'Time Spent (minutes)', range: [0, 30] }
     };
 
     // Plot the data
-    Plotly.newPlot('chartDiv', [trace], layout);
+    Plotly.newPlot('chartDiv2', [traceRoutes], layout2);
 
-  }
+    }
     fetchDataAndPlot();
 </script>
 </html>
