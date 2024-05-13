@@ -437,6 +437,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/DetailsTraffic'
 
+    /traffic/details/weather/{wmain}:
+      parameters:
+        - name: wmain
+          in: path
+          required: true
+          schema:
+            type: string
+      get:
+        summary: Returns the average acceleration and time spent form the specified weather condition.
+        operationId: controller.get_traffic_details_by_weather
+        responses:
+          200:
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/DetailsTrafficWeather'
+
 components:
   schemas:
     Weather:
@@ -557,3 +575,20 @@ components:
           type: number
         time_spent:
           type: number
+    DetailsTrafficWeather:
+      type: object
+      properties:
+        travelID:
+          type: number
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        avg_acceleration:
+          type: number
+        time_spent:
+          type: number
+        wmain:
+          type: string

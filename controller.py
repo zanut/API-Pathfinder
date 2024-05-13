@@ -298,3 +298,23 @@ def get_traffic_details_by_travel_id(travel_id):
         """, (travel_id, travel_id,))
         result = [models.DetailsTraffic(*row) for row in cs.fetchall()]
         return result
+
+
+def get_traffic_details_by_weather(wmain):
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT 
+                TravelID AS travelID,
+                MIN(t.Timestamp) AS startTime,
+                MAX(t.Timestamp) AS endTime,
+                ROUND(AVG(Acceleration), 4) AS avg_acceleration, 
+                TIMESTAMPDIFF(MINUTE, MIN(t.Timestamp), MAX(t.Timestamp)) AS time_spent,
+                'Rain' AS wmain
+            FROM API_weather w
+            INNER JOIN Updated_GPS_tracker t
+            ON ABS(TIMESTAMPDIFF(SECOND, t.`Timestamp`, w.`Timestamp`)) <= 300
+            WHERE w.wmain = 'Rain'
+            GROUP BY TravelID
+        """, (wmain, wmain))
+        result = [models.DetailsTrafficWeather(*row) for row in cs.fetchall()]
+        return result
