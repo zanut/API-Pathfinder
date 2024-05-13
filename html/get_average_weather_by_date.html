@@ -5,13 +5,16 @@
 <title>Average Monthly Rainfalls</title>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <body>
-  <div id="chart" style="width:100%;height:75vh;"></div>
-   <div id="chartContainer"></div>
+<!--  <div id="chart" style="width:100%;height:75vh;"></div>-->
   <select id="dataComboBox">
-    <!-- Options will be populated dynamically -->
   </select>
   <button id="plotButton">Plot Graph</button>
   <script>
+    function createChartDiv(chartId) {
+      var chartDiv = document.createElement('div');  // Create a new div element
+      chartDiv.id = chartId;                         // Assign an ID to the div
+      document.body.appendChild(chartDiv);           // Append the div to the body or another container
+    }
     async function fetchDataAndPlot() {
       try {
 
@@ -49,30 +52,30 @@
 
 
       // Add click event listener to the plot button
-          plotButton.addEventListener('click', () => {
-            const selectedValue = comboBox.value; // Get the selected value from the combo box
+        plotButton.addEventListener('click', () => {
+          const selectedValue = comboBox.value; // Get the selected value from the combo box
 
-            // Now you can use the selected value in your GraphQL query or other code for plotting the graph
-            const query = `
-              {
-                controllerGetWeatherByDate(date: "${selectedValue}") {
-                  cloud
-                  dp
-                  hum
-                  pres
-                  temp
-                  timestamp
-                  uvi
-                  vis
-                  wdes
-                  wmain
-                }
+          // Now you can use the selected value in your GraphQL query or other code for plotting the graph
+          const query = `
+            {
+              controllerGetWeatherByDate(date: "${selectedValue}") {
+                    cloud
+                    dp
+                    hum
+                    pres
+                    temp
+                    timestamp
+                    uvi
+                    vis
+                    wdes
+                    wmain
               }
-            `;
+            }
+          `;
 
-            // Placeholder function for plotting the graph (replace with your actual graph plotting logic)
-            plotGraph(query);
-          });
+          // Placeholder function for plotting the graph (replace with your actual graph plotting logic)
+          plotGraph(query);
+        });
       } catch (error) {
         console.error('Error fetching data:', error);
         }
@@ -93,28 +96,76 @@
           })
         });
         var json = await resp.json();
-        var table = json.data.controllerGetWeatherByDate;
-        var data = [];
-        data.push({
-          x: table.map(row => row.timestamp),
-          y: table.map(row => row.temp),
-          type: 'line',
-          name: 'Temperature',
-        });
-        var layout = {
-          title: 'Average Weather by Date',
-          xaxis: {
-            title: 'Timestamp'
-          },
-          yaxis: {
-            title: 'Temperature (°C)',
-            range: [0, 50]
-          }
+        var data = json.data.controllerGetWeatherByDate;
+        // ploting graph
+        var traceTemperature = {
+          x: data.map(row => row.timestamp),
+          y: data.map(row => row.temp),
+          type: 'scatter',
+          mode: 'lines',
+          name: 'Temperature'
         };
-        var config = { responsive: true };
-        Plotly.newPlot("chartContainer", data, layout, config);
+        var layoutTemperature = {
+          title: 'Temperature Over Time',
+          xaxis: { title: 'Time' },
+          yaxis: { title: 'Temperature (°C)',
+                   range: [0, 50]},
+
+        };
+        Plotly.newPlot('temperatureChart', [traceTemperature], layoutTemperature, {responsive: true});
+
+        var traceCloud = {
+          x: data.map(row => row.timestamp),
+          y: data.map(row => row.cloud),
+          fill: 'tozeroy',
+          type: 'scatter',
+          name: 'Cloud Cover'
+        };
+        var layoutCloud = {
+          title: 'Cloud Cover Over Time',
+          xaxis: { title: 'Time' },
+          yaxis: { title: 'Cloud Cover (%)', range: [0, 100] }
+        };
+        Plotly.newPlot('cloudChart', [traceCloud], layoutCloud, {responsive: true});
+
+        var traceHumidity = {
+          x: data.map(row => row.temp),
+          y: data.map(row => row.hum),
+          type: 'scatter',
+          mode: 'markers',
+          name: 'Temp vs Humidity',
+          marker: { size: 10 }
+          };
+
+        var layoutTempHum = {
+          title: 'Temperature vs Humidity',
+          xaxis: { title: 'Temperature (°C)' },
+          yaxis: { title: 'Humidity (%)'}
+        }
+        Plotly.newPlot('tempHumChart', [traceHumidity], layoutTempHum, {responsive: true});
+
+        var traceVisibility = {
+          x: data.map(row => row.timestamp),
+          y: data.map(row => row.vis),
+          type: 'scatter',
+          mode: 'lines',
+          fill: 'tozeroy',
+          name: 'Visibility'
+        };
+        var layoutVisibility = {
+          title: 'Visibility Over Time',
+          xaxis: { title: 'Time' },
+          yaxis: { title: 'Visibility (meters)', range: [0, 10000] }
+        };
+        Plotly.newPlot('visibilityChart', [traceVisibility], layoutVisibility, {responsive: true});
     }
+
+
     // Call fetchDataAndPlot when the page loads
+    createChartDiv('temperatureChart');
+    createChartDiv('cloudChart');
+    createChartDiv('tempHumChart');
+    createChartDiv('visibilityChart')
     fetchDataAndPlot();
   </script>
 </body>

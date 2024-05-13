@@ -43,6 +43,7 @@ def get_weather_by_date(date):
             SELECT Timestamp, wmain, wdes, temp, hum, pres, dp, uvi, cloud, vis
             FROM API_weather
             WHERE DATE(Timestamp) = %s
+            ORDER BY Timestamp ASC
         """, (date,))
         result = [models.Weather(*row) for row in cs.fetchall()]
         return result
