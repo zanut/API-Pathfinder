@@ -77,7 +77,8 @@ class TestAPI(unittest.TestCase):
     def test_get_average_weather_between_timestamp(self):
         begin = '2024-05-10 10:00:00'
         end = '2024-05-10 12:30:00'
-        response = requests.get(f'{self.base_url}/weather/average/since/{begin}/to/{end}')
+        response = requests.get(
+            f'{self.base_url}/weather/average/since/{begin}/to/{end}')
 
         self.assertEqual(response.status_code, 200)
 

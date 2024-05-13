@@ -1,5 +1,0 @@
-OPENAPI_STUB_DIR = 'stub'
-DB_HOST = openapi-to-graphql
-DB_USER = <database user>
-DB_PASSWD = <database password>
-DB_NAME = <database name>

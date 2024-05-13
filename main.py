@@ -3,7 +3,7 @@ import os
 
 if not os.path.exists("config.py"):
     print("Configuration 'config.py' not found.  "
-          "You may create one from 'config.py.example'.")
+          "You may create one from 'config.py'.")
     sys.exit(1)
 
 from config import OPENAPI_STUB_DIR
