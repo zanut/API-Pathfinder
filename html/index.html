@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>Traffic & Weather Data Visualization</title>
   <style>
+    /* Basic styling for a clean and readable layout */
     body {
       font-family: Arial, sans-serif;
       margin: 2rem;
@@ -20,8 +21,10 @@
     }
 
     li {
-      display: inline-block;
-      margin-right: 1rem;
+
+      width: 400px;
+      display: block;
+      margin-bottom: 1rem;
       background-color: #f0f0f0;
       padding: 1rem;
       border: 1px solid #ddd;
@@ -30,23 +33,23 @@
     }
 
     a {
-      text-decoration: none;
-      color: #007bff;
-      font-weight: bold;
-      display: block;
-      width: 100%;
+      text-decoration: none;   /* Remove underline from links */
+      color: #007bff;          /* Blue color for links */
+      font-weight: bold;       /* Make links bolder */
+      display: block;          /* Make the link take up the entire box */
+      width: 100%;             /* Set a width for the box (adjust as needed) */
     }
 
     a:hover {
-      color: #0056b3;
+      color: #0056b3;          /* Change link color on hover */
     }
   </style>
 </head>
 <body>
   <h1>Traffic & Weather Data Visualization</h1>
-  <ul>
+  <ul style="display: grid; place-items: center;">
     <li><a href="get_average_weather_by_date.html">Average Weather by Date</a></li>
-    <li><a href="get_all_average_weather_week.html">Average Weather in 1 Week</a></li>
+    <li><a href="get_all_average_weather_week.html">Average Weather Conditions (Past week)</a></li>
   </ul>
 </body>
 </html>
