@@ -173,7 +173,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/AverageWeather'
 
-  /weather/average/{begin}/to/{end}:
+  /weather/average/since/{begin}/to/{end}:
     parameters:
       - name: begin
         in: path
@@ -450,6 +450,28 @@ components:
           type: number
         vis:
           type: number
+    AverageWeatherTimestamp:
+      type: object
+      properties:
+        wmain:
+          type: string
+        occurrence_percentage:
+          type: number
+        avg_temp:
+          type: number
+        avg_hum:
+          type: number
+        avg_pres:
+          type: number
+        avg_dp:
+          type: number
+        avg_uvi:
+          type: number
+        avg_cloud:
+          type: number
+        avg_vis:
+          type: number
+
     AverageWeather:
       type: object
       properties:

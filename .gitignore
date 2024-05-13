@@ -163,3 +163,5 @@ cython_debug/
 stub/
 config.py
 openapi-generator-cli-7.0.1.jar
+.DS_Store
+.gitignore

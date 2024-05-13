@@ -121,19 +121,19 @@ def get_average_weather_between_timestamp(begin_timestamp, end_timestamp):
         cs.execute("""
             SELECT 
                 wmain,
-                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE Timestamp >= %s AND Timestamp <= %s), 4) AS occurrence_percentage
+                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE Timestamp >= %s AND Timestamp <= %s), 4) AS occurrence_percentage,
                 ROUND(AVG(temp), 4) AS avg_temp, 
                 ROUND(AVG(hum), 4) AS avg_hum, 
                 ROUND(AVG(pres), 4) AS avg_pres, 
                 ROUND(AVG(dp), 4) AS avg_dp, 
                 ROUND(AVG(uvi), 4) AS avg_uvi, 
                 ROUND(AVG(cloud), 4) AS avg_cloud, 
-                ROUND(AVG(vis), 4) AS avg_vis,
+                ROUND(AVG(vis), 4) AS avg_vis
             FROM API_weather
             WHERE Timestamp >= %s AND Timestamp <= %s
             GROUP BY wmain
         """, (begin_timestamp, end_timestamp, begin_timestamp, end_timestamp))
-        result = [models.AverageWeather(*row) for row in cs.fetchall()]
+        result = [models.AverageWeatherTimestamp(*row) for row in cs.fetchall()]
         return result
 
 
@@ -198,7 +198,7 @@ def get_traffic_by_device_weather(device_id, wmain):
             SELECT t.Timestamp, t.Latitude, t.Longitude, t.DeviceID, t.Acceleration
             FROM API_weather w
             INNER JOIN Updated_GPS_tracker t
-            ON ABS(TIMESTAMPDIFF(SECOND, t.`Timestamp`, w.`Timestamp`)) <= 300;
+            ON ABS(TIMESTAMPDIFF(SECOND, t.`Timestamp`, w.`Timestamp`)) <= 300
             WHERE t.DeviceID = %s
             AND w.wmain = %s
         """, (device_id, wmain))
