@@ -94,6 +94,16 @@ class TestAPI(unittest.TestCase):
         data = response.json()
         self.assertIsInstance(data, list)
 
+    def test_get_weather_condition_by_time(self):
+        time = '2024-05-10 10:00:00'
+        response = requests.get(
+            f'{self.base_url}/weather/condition/{time}')
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertIsInstance(data, list)
+
     def test_get_traffic_all(self):
         response = requests.get(f'{self.base_url}/traffic')
 
@@ -199,6 +209,16 @@ class TestAPI(unittest.TestCase):
     def test_get_traffic_details_by_travel_id(self):
         TravelID = 2
         response = requests.get(f'{self.base_url}/traffic/details/{TravelID}')
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertIsInstance(data, list)
+
+    def test_get_traffic_details_by_weather(self):
+        wmain = 'Rain'
+        response = requests.get(
+            f'{self.base_url}/traffic/details/weather/{wmain}')
 
         self.assertEqual(response.status_code, 200)
 

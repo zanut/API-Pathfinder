@@ -25,7 +25,8 @@ Statistical Endpoints of the acquired data included
 
  **Weather**
 - All weather data
-- Weather Data for the specified date
+- Weather Condition at specified date-time
+- Weather Data for the whole specified date
 - Weather Data for the specified date and hour
 - Weather Data between two date-time
 - Average weather data for the specified date
@@ -43,6 +44,7 @@ Statistical Endpoints of the acquired data included
 - Traffic data for the specified TravelID(each time we travel)
 - All Calculated Traffic data(acceleration and time spent)
 - Calculated Traffic data(acceleration and time spent) for each TravelID
+- Calculated Traffic data(acceleration and time spent) for specified weather condition
 
 ## Libraries and Tools
 **Python**
