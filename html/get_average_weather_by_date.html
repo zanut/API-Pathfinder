@@ -61,7 +61,6 @@
     }
     async function fetchDataAndPlot() {
       try {
-
         // Fetch data from your API endpoint
         var response = await fetch('http://localhost:3000/graphql', {
                   method: 'POST',
@@ -103,16 +102,16 @@
           const query = `
             {
               controllerGetWeatherByDate(date: "${selectedValue}") {
-                    cloud
-                    dp
-                    hum
-                    pres
-                    temp
-                    timestamp
-                    uvi
-                    vis
-                    wdes
-                    wmain
+                cloud
+                dp
+                hum
+                pres
+                temp
+                timestamp
+                uvi
+                vis
+                wdes
+                wmain
               }
             }
           `;
@@ -151,10 +150,11 @@
         };
         var layoutTemperature = {
           title: 'Temperature Over Time',
-          xaxis: { title: 'Time' },
-          yaxis: { title: 'Temperature (°C)',
-                   range: [0, 50]},
-
+          xaxis: {
+            title: 'Time' },
+          yaxis: {
+            title: 'Temperature (°C)',
+            range: [0, 50]},
         };
         Plotly.newPlot('temperatureChart', [traceTemperature], layoutTemperature, {responsive: true});
 

@@ -6,55 +6,79 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <body>
     <script>
-      async function fetchDataAndPlot() {
-        try {
-          // Fetch data from your API endpoint
-          var response = await fetch('http://localhost:3000/graphql', {
+        function createChartDiv(chartId) {
+            var chartDiv = document.createElement('div');  // Create a new div element
+            chartDiv.id = chartId;                         // Assign an ID to the div
+            document.body.appendChild(chartDiv);           // Append the div to the body or another container
+        }
+        async function fetchDataAndPlot() {
+            // Fetch data from your API endpoint
+            var response = await fetch('http://localhost:3000/graphql', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    query: `
+                    {
+                        weatherUniqueDate {
+                        date
+                        }
+                    }
+                    `
+                })
+            });
+            const data = await response.json(); // Assuming your API returns JSON data
+            const arrayOfDicts = data.data.weatherUniqueDate.slice(-7);
+            console.log(arrayOfDicts);
+            for (const dict of arrayOfDicts) {
+                console.log(dict.date);
+
+                // feteching the data from the server
+                var response = await fetch('http://localhost:3000/graphql', {
                     method: 'POST',
                     headers: {
-                      'Content-Type': 'application/json',
-                      'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                     },
                     body: JSON.stringify({
-                      query: `
+                        query: `
                         {
-                          weatherUniqueDate {
-                            date
-                           }
+                            weatherAverage(date: "${dict.date}") {
+                            occurrencePercentage
+                            wmain
                         }
-                      `
+                    }
+                    `
                     })
-                  });
-          const data = await response.json(); // Assuming your API returns JSON data
-          const arrayOfDicts = data.data.weatherUniqueDate.slice(-7);
-          console.log(arrayOfDicts);
+                });
 
-          const plotButton = document.getElementById('plotButton');
-          // var table = json.data.weatherUniqueDate;
-          for (const dict of arrayOfDicts) {
-              // feteching the data from the server
-              console.log(dict.date);
-          }
+                var json = await response.json();
+                var result = json.data.weatherAverage;
 
-      async function plotGraph(query) {
-        console.log('Plotting graph with query:', query);
-        // Add your graph plotting code here
-        var resp = await fetch('http://localhost:3000/graphql', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: JSON.stringify({
-            query: query
-          })
-        });
-        var json = await resp.json();
-        var data = json.data.controllerGetWeatherByDate;
-        // ploting some garph
+                // creating a new div element for the chart
+                var chartDiv = document.createElement('div');
+                chartDiv.id = dict.date;
+                document.body.appendChild(chartDiv);
 
+                // setting the pie chart data
+                var tracePie = {
+                    labels : result.map(row => row.wmain),
+                    values : result.map(row => row.occurrencePercentage),
+                    type: 'pie'
+                };
+                console.log(tracePie);
+                var layout = {
+                    title: `Average Weather condition for ${dict.date}`,
+                    height: 400,
+                    width: 500
+                };
+                // Plotting the pie chart
+                Plotly.newPlot(dict.date, [tracePie], layout);
+            }
         }
-      fetchDataAndPlot();
+        fetchDataAndPlot();
     </script>
 </body>
 </html>
