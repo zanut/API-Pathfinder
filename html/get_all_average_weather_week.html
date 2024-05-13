@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Average Monthly Rainfalls</title>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<body>
+    <script>
+      async function fetchDataAndPlot() {
+        try {
+          // Fetch data from your API endpoint
+          var response = await fetch('http://localhost:3000/graphql', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      query: `
+                        {
+                          weatherUniqueDate {
+                            date
+                           }
+                        }
+                      `
+                    })
+                  });
+          const data = await response.json(); // Assuming your API returns JSON data
+          const arrayOfDicts = data.data.weatherUniqueDate.slice(-7);
+          console.log(arrayOfDicts);
+
+          const plotButton = document.getElementById('plotButton');
+          // var table = json.data.weatherUniqueDate;
+          for (const dict of arrayOfDicts) {
+              // feteching the data from the server
+              console.log(dict.date);
+          }
+
+      async function plotGraph(query) {
+        console.log('Plotting graph with query:', query);
+        // Add your graph plotting code here
+        var resp = await fetch('http://localhost:3000/graphql', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            query: query
+          })
+        });
+        var json = await resp.json();
+        var data = json.data.controllerGetWeatherByDate;
+        // ploting some garph
+
+        }
+      fetchDataAndPlot();
+    </script>
+</body>
+</html>
