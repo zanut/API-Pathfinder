@@ -119,14 +119,14 @@ def get_average_weather_between_timestamp(begin_timestamp, end_timestamp):
         cs.execute("""
             SELECT
                 wmain,
-                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE Timestamp >= %s AND Timestamp <= %s), 4) AS occurrence_percentage,
+                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM API_weather WHERE Timestamp >= %s AND Timestamp <= %s), 4) AS occurrence_percentage
                 ROUND(AVG(temp), 4) AS avg_temp, 
                 ROUND(AVG(hum), 4) AS avg_hum, 
                 ROUND(AVG(pres), 4) AS avg_pres, 
                 ROUND(AVG(dp), 4) AS avg_dp, 
                 ROUND(AVG(uvi), 4) AS avg_uvi, 
                 ROUND(AVG(cloud), 4) AS avg_cloud, 
-                ROUND(AVG(vis), 4) AS avg_vis
+                ROUND(AVG(vis), 4) AS avg_vis,
             FROM API_weather
             WHERE Timestamp >= %s AND Timestamp <= %s
             GROUP BY wmain
