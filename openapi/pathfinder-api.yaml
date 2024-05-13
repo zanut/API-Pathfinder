@@ -486,25 +486,26 @@ components:
           type: number
     AverageWeatherRainPercent:
       type: object
-        properties:
-          date:
-            type: date
-          avg_temp:
-            type: number
-          avg_hum:
-            type: number
-          avg_pres:
-            type: number
-          avg_dp:
-            type: number
-          avg_uvi:
-            type: number
-          avg_cloud:
-            type: number
-          avg_vis:
-            type: number
-          rain_percentage:
-            type: number
+      properties:
+        date:
+          type: string
+          format: date
+        avg_temp:
+          type: number
+        avg_hum:
+          type: number
+        avg_pres:
+          type: number
+        avg_dp:
+          type: number
+        avg_uvi:
+          type: number
+        avg_cloud:
+          type: number
+        avg_vis:
+          type: number
+        rain_percentage:
+          type: number
     WeatherUniqueDate:
       type: object
       properties:
