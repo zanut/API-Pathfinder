@@ -316,6 +316,7 @@ def get_traffic_details_by_weather(wmain):
             GROUP BY TravelID
         """, (wmain, wmain))
         result = [models.DetailsTrafficWeather(*row) for row in cs.fetchall()]
+        return result
 
 
 def get_weather_condition_by_time(time):
