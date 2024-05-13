@@ -32,6 +32,7 @@ def get_weather_unique_date():
             SELECT DISTINCT DATE(Timestamp)
             FROM API_weather
         """)
+
         result = [models.WeatherUniqueDate(*row) for row in cs.fetchall()]
         return result
 
@@ -194,8 +195,9 @@ def get_traffic_by_device_weather(device_id, wmain):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
             SELECT t.Timestamp, t.Latitude, t.Longitude, t.DeviceID, t.Acceleration
-            FROM Updated_GPS_tracker t
-            INNER JOIN API_weather w ON DATE(t.Timestamp) = DATE(w.Timestamp)
+            FROM API_weather w
+            INNER JOIN Updated_GPS_tracker t
+            ON ABS(TIMESTAMPDIFF(SECOND, t.`Timestamp`, w.`Timestamp`)) <= 300;
             WHERE t.DeviceID = %s
             AND w.wmain = %s
         """, (device_id, wmain))
