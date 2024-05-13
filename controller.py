@@ -251,6 +251,7 @@ def get_traffic_unique_travel_id():
         cs.execute("""
             SELECT DISTINCT TravelID
             FROM Updated_GPS_tracker
+            ORDER BY TravelID ASC
         """)
         result = [models.UniqueTravelID(*row) for row in cs.fetchall()]
         return result
