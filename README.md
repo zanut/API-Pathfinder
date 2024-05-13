@@ -6,34 +6,43 @@
 | Chanun Suntrapiwat      | 6510545357     |
 | Jirapat Chutimantapong  | 6510545292     |
 
-## Abstract
-This project is a part of the year project of  ***Data Acquisition and Integration***, 
-***Data Analytics***, and ***Software Testing*** course Kasetsart University.
+## Project Overview
+We try to investigate the relation between traffic and weather by collecting 
+the data on traffic like linearX, linearY, LinearZ, Latitude, Longitude ,and Timestamp 
+in realtime and change into acceleration and time spent for each time we travel to University.
 
-Our project aims to collect data to study the possible effects of traffic around 
-Kasetsart University (Computer Department) that potentially cause air/noise pollution.
+> We used 2 devices(from each member) to collect the traffic data.
 
-Our goal is to study the correlations between the acquired data using the 
-knowledge on data acquisition and analytics.
-
-> By the “traffic around Kasetsart University”, we refer to the traffic on 
-**Ngamwongwan Road** to the **Kasetsart Intersection** which only includes the section 
+> We collected data from traffic on **Ngamwongwan Road** to the **Kasetsart Intersection** which only includes the section 
 that’s around the campus area due to difficulties on data collecting.
 
 ## Features
-**Trafica web-application would provide the following:**
-- Visualize the the acquired Traffic Flow, Air Quality, Noise Pollution data around the Computer Engineering Dept. Kasetsart University
-- Display statistical number of the data acquired
+- Visualization Web Application.
+- Display statistical number of the data acquired.
 
 **The API would provide:**
 Statistical Endpoints of the acquired data included
 
  **Weather**
-- 
+- All weather data
+- Weather Data for the specified date
+- Weather Data for the specified date and hour
+- Weather Data between two date-time
+- Average weather data for the specified date
+- Average weather data for the specified date and hour
+- Average weather data between two date-time
+- Average weather data with rain-percentage
 
 **Traffic**
-- 
-
+- All traffic data
+- Traffic data for the specified date
+- Traffic data from each device
+- Traffic data from each device between two date-time
+- Traffic data from each device for the specified date
+- Traffic data from each device for the specified weather condition
+- Traffic data for the specified TravelID(each time we travel)
+- All Calculated Traffic data(acceleration and time spent)
+- Calculated Traffic data(acceleration and time spent) for each TravelID
 
 ## Libraries and Tools
 **Python**
@@ -42,9 +51,6 @@ We use Python as a main programming language in our project
 **Restful API**
 We utilized Restful API to create our API Endpoints
 
-**Swagger**
-
-**GraphQL**
 
 The remaining libraries and tools are available in `requirements.txt` file. 
 
@@ -62,12 +68,12 @@ Here is some guideline on how to setup the project:
 ### Clone the repository
 Open the terminal at the desire directory, and run the following command:
 ```
->
+> git clone https://github.com/zanut/API-Pathfinder.git
 ```
 
 After cloning the project. Navigate to the repository with this command:
 ```
->
+> cd API-Pathfinder
 ```
 
 ### Initialize the Virtual Environment
@@ -95,11 +101,9 @@ Then after the virtual environment is generated, activate the virtual environmen
 Lastly, install the required packages using the following command:
 ```
 > pip install -r requirements.txt
+
 ```
 
-*Credit: MacOS guide were originated from this [Medium article][^1]*
-
-[^1]: <https://medium.com/datacat/a-simple-guide-to-creating-a-virtual-environment-in-python-for-windows-and-mac-1079f40be518> "A simple guide to creating a virtual environment in Python for Windows and Mac"
 
 ### Configure the `config.py`
 1. Duplicate the `config.py.example`. Rename it to `config.py`
@@ -109,15 +113,33 @@ Lastly, install the required packages using the following command:
    - DB_PASSWD = "[KU Email (@ku.th)]"
    - DB_NAME = "[Database Name]"
 
-### Start an App
-> For KU students, make sure that you have turned on the VPN connection to 
-> connect to the database
+### Make sure you are connected to KU or are using KU vpn
+you can follow the instruction here:
+- [KU VPN](https://vpn.ku.ac.th)
 
-#### To start an API connection
+### Stub
+- Make the python-flask folder from the [Swagger Editor](https://editor.swagger.io).
+- Unzip the file and move the file to the project's directory.
+
+### Start an API connection
+In project's directory run:
 ```
-> 
+> python3 main.py
 ```
-You'll be able to access the api endpoints via
+You'll be able to access the api endpoints via:
+```
+http://127.0.0.1:8080/pathfinder-api/v1/ui
 ```
 
+### Connect GraphQL
+Open another Terminal, run:
 ```
+> openapi-to-graphql --cors openapi/pathfinder-api.yaml
+```
+You'll be able to test query in GraphiQL at:
+```
+http://localhost:3000/graphql
+```
+
+### Open Web Application
+- Open the index.html file in your preferred browser
