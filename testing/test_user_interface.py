@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 
 
-class NavigationTest(unittest.TestCase):
+class TestUserInterface(unittest.TestCase):
     def setUp(self):
         self.service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=self.service)

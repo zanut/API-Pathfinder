@@ -1,7 +1,7 @@
 import unittest
 import requests
 from unittest.mock import MagicMock, patch
-from controller import *
+# from controller import *
 
 
 class TestAPI(unittest.TestCase):
