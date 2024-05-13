@@ -55,11 +55,11 @@
   <div class="chart-container" id="tempHumChart"></div>
   <div class="chart-container" id="visibilityChart"></div>
   <script>
-    function createChartDiv(chartId) {
-      var chartDiv = document.createElement('div');  // Create a new div element
-      chartDiv.id = chartId;                         // Assign an ID to the div
-      document.body.appendChild(chartDiv);           // Append the div to the body or another container
-    }
+    // function createChartDiv(chartId) {
+    //   var chartDiv = document.createElement('div');  // Create a new div element
+    //   chartDiv.id = chartId;                         // Assign an ID to the div
+    //   document.body.appendChild(chartDiv);           // Append the div to the body or another container
+    // }
     async function fetchDataAndPlot() {
       try {
         // Fetch data from your API endpoint
@@ -98,7 +98,6 @@
       // Add click event listener to the plot button
         plotButton.addEventListener('click', () => {
           const selectedValue = comboBox.value; // Get the selected value from the combo box
-
           // Now you can use the selected value in your GraphQL query or other code for plotting the graph
           const query = `
             {
@@ -204,13 +203,11 @@
         };
         Plotly.newPlot('visibilityChart', [traceVisibility], layoutVisibility, {responsive: true});
     }
-
-
     // Call fetchDataAndPlot when the page loads
-    createChartDiv('temperatureChart');
-    createChartDiv('cloudChart');
-    createChartDiv('tempHumChart');
-    createChartDiv('visibilityChart')
+    // createChartDiv('temperatureChart');
+    // createChartDiv('cloudChart');
+    // createChartDiv('tempHumChart');
+    // createChartDiv('visibilityChart')
     fetchDataAndPlot();
   </script>
 </body>
