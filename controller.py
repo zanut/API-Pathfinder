@@ -1,4 +1,6 @@
 import sys
+import traceback
+
 from flask import abort
 import pymysql
 from dbutils.pooled_db import PooledDB
@@ -114,7 +116,7 @@ def get_average_weather_by_date_hour(date, hour):
         return result
 
 
-def get_average_weather_between_timestamp(begin_timestamp, end_timestamp):
+def get_average_weather_between_timestamp(begin, end):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
             SELECT
@@ -130,10 +132,9 @@ def get_average_weather_between_timestamp(begin_timestamp, end_timestamp):
             FROM API_weather
             WHERE Timestamp >= %s AND Timestamp <= %s
             GROUP BY wmain
-        """, (begin_timestamp, end_timestamp, begin_timestamp, end_timestamp))
-        result = [models.AverageWeatherTimestamp(*row) for row in cs.fetchall()]
+        """, (begin, end, begin, end))
+        result = [models.AverageWeather(*row) for row in cs.fetchall()]
         return result
-
 
 def get_traffic_all():
     with pool.connection() as conn, conn.cursor() as cs:
