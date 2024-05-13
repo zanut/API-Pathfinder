@@ -34,7 +34,6 @@ def get_weather_unique_date():
             SELECT DISTINCT DATE(Timestamp)
             FROM API_weather
         """)
-
         result = [models.WeatherUniqueDate(*row) for row in cs.fetchall()]
         return result
 
@@ -317,4 +316,15 @@ def get_traffic_details_by_weather(wmain):
             GROUP BY TravelID
         """, (wmain, wmain))
         result = [models.DetailsTrafficWeather(*row) for row in cs.fetchall()]
+
+
+def get_weather_condition_by_time(time):
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT Timestamp, wmain, wdes, temp, hum, pres, dp, uvi, cloud, vis
+            FROM API_weather
+            ORDER BY ABS(TIMESTAMPDIFF(SECOND, %s, Timestamp))
+            LIMIT 1
+        """, (time,))
+        result = [models.Weather(*row) for row in cs.fetchall()]
         return result

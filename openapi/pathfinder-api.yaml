@@ -38,15 +38,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/WeatherUniqueDate'
-          links:
-            weatherbydate:
-              operationId: controller.get_weather_by_date
-              parameters:
-                date: $response.body#/Date
-            weatherbyaverage:
-              operationId: controller.get_average_weather_by_date
-              parameters:
-                date: $response.body#/Date
 
   /weather/{date}:
     parameters:
@@ -212,6 +203,26 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AverageWeatherRainPercent'
+  /weather/condition/{time}:
+    parameters:
+      - name: time
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date-time
+    get:
+      summary: Returns the weather condition for the specified time.
+      operationId: controller.get_weather_condition_by_time
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Weather'
 
   /traffic:
     get:
@@ -257,7 +268,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Traffic'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Traffic'
 
   /traffic/device/{deviceID}/{begin}/{end}:
     parameters:
@@ -285,7 +298,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Traffic'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Traffic'
 
   /traffic/device/{deviceID}/{date}:
     parameters:
@@ -308,7 +323,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Traffic'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Traffic'
 
   /traffic/device/{deviceID}/weather/{wmain}:
     parameters:
@@ -331,7 +348,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Traffic'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Traffic'
 
   /traffic/uniqueDate:
     get:
@@ -346,11 +365,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UniqueDate'
-          links:
-            uniqueDate:
-              operationId: controller.get_traffic_by_date
-              parameters:
-                date: $response.body#/Date
 
   /traffic/uniqueDate/{date}:
     parameters:
@@ -368,7 +382,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Traffic'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Traffic'
 
   /traffic/{TravelID}:
     parameters:
@@ -386,7 +402,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Traffic'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Traffic'
 
   /traffic/uniqueTravelID:
     get:
@@ -401,11 +419,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UniqueTravelID'
-          links:
-            details:
-              operationId: controller.get_traffic_details_by_travel_id
-              parameters:
-                TravelID: $response.body#/TravelID
 
   /traffic/details:
       get:
@@ -417,7 +430,9 @@ paths:
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/DetailsTraffic'
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/DetailsTraffic'
 
   /traffic/details/{TravelID}:
     parameters:

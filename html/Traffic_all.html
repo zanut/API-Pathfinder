@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Traffic Condition</title>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<style>
+
+</style>
+<body>
+<div id="chartDiv" style="width:100%;height:75vh;"></div>
+</body>
+<script>
+  async function fetchDataAndPlot() {
+    var response = await fetch('http://localhost:3000/graphql', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    query: `
+                      {
+                        trafficDetails {
+                          avgAcceleration
+                          endTime
+                          startTime
+                          timeSpent
+                          travelID
+                        }
+                      }
+                    `
+                  })
+                });
+    const data = await response.json();
+    const arrayOfDicts = data.data.trafficDetails;
+    const timeSpentValues = arrayOfDicts.map(item => item.timeSpent);
+    const timestampValues = arrayOfDicts.map(item => item.startTime); // Assuming startTime represents Timestamp
+
+    const trace = {
+      x: timestampValues,
+      y: timeSpentValues,
+      type: 'scatter',
+      mode: 'markers',
+      marker: { size: 10, color: 'blue' },
+      name: 'Time Spent'
+    };
+    const layout = {
+      title: 'Time Spent on Road Over Time',
+      xaxis: { title: 'Timestamp' },
+      yaxis: { title: 'Time Spent (minutes)', range: [0, 30] }
+    };
+
+    // Plot the data
+    Plotly.newPlot('chartDiv', [trace], layout);
+
+  }
+    fetchDataAndPlot();
+</script>
+</html>
