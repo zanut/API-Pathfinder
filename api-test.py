@@ -85,6 +85,15 @@ class TestAPI(unittest.TestCase):
         data = response.json()
         self.assertIsInstance(data, list)
 
+    def test_get_average_weather_with_rain_percent(self):
+        response = requests.get(
+            f'{self.base_url}/weather/average/rainPercent')
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertIsInstance(data, list)
+
     def test_get_traffic_all(self):
         response = requests.get(f'{self.base_url}/traffic')
 
@@ -195,3 +204,7 @@ class TestAPI(unittest.TestCase):
 
         data = response.json()
         self.assertIsInstance(data, list)
+
+
+if __name__ == '__main__':
+    unittest.main()

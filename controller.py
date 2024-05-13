@@ -136,6 +136,27 @@ def get_average_weather_between_timestamp(begin, end):
         result = [models.AverageWeather(*row) for row in cs.fetchall()]
         return result
 
+
+def get_average_weather_with_rain_percent():
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT
+                DATE(Timestamp) AS date,
+                ROUND(AVG(temp), 4) AS avg_temp, 
+                ROUND(AVG(hum), 4) AS avg_hum, 
+                ROUND(AVG(pres), 4) AS avg_pres, 
+                ROUND(AVG(dp), 4) AS avg_dp, 
+                ROUND(AVG(uvi), 4) AS avg_uvi, 
+                ROUND(AVG(cloud), 4) AS avg_cloud, 
+                ROUND(AVG(vis), 4) AS avg_vis,
+                ROUND(SUM(CASE WHEN wmain = 'Rain' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS rain_percentage
+            FROM API_weather
+            GROUP BY DATE(Timestamp)
+        """)
+        result = [models.AverageWeatherRainPercent(*row) for row in cs.fetchall()]
+        return result
+
+
 def get_traffic_all():
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
